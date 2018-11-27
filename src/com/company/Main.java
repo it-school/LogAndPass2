@@ -1,10 +1,10 @@
 package com.company;
 
-import javax.print.DocFlavor;
 import java.io.*;
 import java.util.Scanner;
 
 public class Main {
+
 
     public static void main(String[] args) {
         Scanner in = new Scanner(System.in);
@@ -19,14 +19,15 @@ public class Main {
 
         System.out.print("1 - регистрация\n2 - вход\n");
         RegOrLog = in.next();
-        switch(RegOrLog) {
+        switch (RegOrLog) {
             case "1": {
                 System.out.print("Input login: ");
                 login = in.next();
                 System.out.print("Input password: ");
                 password = in.next();
 
-                Change(login, password, newPass, newLogin);
+                newLogin = Coder.Encrypt(login, "3", EnumType.CipherType.Caesar);
+                newPass = Coder.Encrypt(password, "3", EnumType.CipherType.Caesar);
 
                 BufferedWriter bw = null;
                 try {
@@ -55,12 +56,14 @@ public class Main {
                 }
                 break;
             }
-            case "2":
-            {
+            case "2": {
                 System.out.print("Input login: ");
                 login = in.next();
                 System.out.print("Input password: ");
                 password = in.next();
+
+
+
                 BufferedReader br = null;
                 try {
                     br = new BufferedReader(new FileReader("LogAndPass.txt"));
@@ -76,9 +79,12 @@ public class Main {
                         ReadLogin = ReadLogin.substring(ReadLogin.indexOf(" ") + 1, ReadLogin.length());
                         String ReadPassword = br.readLine();
                         ReadPassword = ReadPassword.substring(ReadPassword.indexOf(" ") + 1, ReadPassword.length());
-                        if(login.equals(ReadLogin) && password.equals(ReadPassword))
-                        {
+                        if(Coder.Encrypt(login, "3", EnumType.CipherType.Caesar).equals(ReadLogin)&& Coder.Encrypt(password, "3", EnumType.CipherType.Caesar).equals(ReadPassword)) {
                             System.out.println("Molodec!");
+                        }
+                        else
+                        {
+                            System.out.println("Za vami viehali!");
                         }
                     } catch (IOException e) {
                         e.printStackTrace();
@@ -93,27 +99,12 @@ public class Main {
                 }
                 break;
             }
-            default:
-            {
+            default: {
                 System.out.println("Error input!");
             }
         }
     }
 
-
-    static void Change(String login, String password, String newPass, String newLogin)
-    {
-        char[] loginChars = new char[login.length()];
-        char[] passwordChars = new char[password.length()];
-        for (int j = 0; j < passwordChars.length; j++) {
-            passwordChars[j] = password.charAt(0 + (int)(Math.random() * passwordChars.length));
-            newPass += passwordChars[j];
-        }
-        for (int k = 0; k < loginChars.length; k++) {
-            loginChars[k] = login.charAt(0 + (int)(Math.random() * loginChars.length));
-            newLogin += loginChars[k];
-        }
-    }
 
 
 }
